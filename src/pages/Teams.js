@@ -9,66 +9,57 @@ import TableRow from "@mui/material/TableRow";
 import Paper from "@mui/material/Paper";
 import Layout from "../../components/Layouth";
 import { Typography } from "@mui/material";
+import { getStudents } from "../../api";
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: theme.palette.common.black,
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}));
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  "&:nth-of-type(odd)": {
-    backgroundColor: theme.palette.action.hover,
-  },
-  // hide last border
-  "&:last-child td, &:last-child th": {
-    border: 0,
-  },
-}));
-
-export default function Theams({ posts }) {
+export default function Theams({ data }) {
   return (
     <Layout>
-      <Typography variant="h6">Teams</Typography>
-      <br />
-      <TableContainer component={Paper}>
-        <Table sx={{ minWidth: 700 }} aria-label="customized table">
-          <TableHead>
-            <TableRow>
-              <StyledTableCell>Ismi</StyledTableCell>
-              <StyledTableCell>Balli</StyledTableCell>
-              <StyledTableCell>Qo'shilgan sanasi</StyledTableCell>
-              <StyledTableCell>Kursi</StyledTableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {posts.map((posts) => (
-              <StyledTableRow key={posts.name}>
-                <StyledTableCell component="th" scope="row">
-                  {posts.name}
-                </StyledTableCell>
-                <StyledTableCell>{posts.score}</StyledTableCell>
-                <StyledTableCell>{posts.submitted}</StyledTableCell>
-                <StyledTableCell>{posts.garde}</StyledTableCell>
-              </StyledTableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+      <div>
+      <Typography variant="h6" component={"div"}>Teams</Typography>
+
+<TableContainer component={Paper}>
+  <Table sx={{ minWidth: 650 }} aria-label="simple table">
+    <TableHead>
+      <TableRow>
+        <TableCell>Ismi</TableCell>
+        <TableCell>Bali</TableCell>
+        <TableCell>Qoshilgan sanasi</TableCell>
+        <TableCell></TableCell>
+        <TableCell>kursi</TableCell>
+      </TableRow>
+    </TableHead>
+    <TableBody>
+      {data.map((row) => (
+        <TableRow key={row.name}>
+          <TableCell component="th" scope="row">
+            {row.name}
+          </TableCell>
+          <TableCell>{row.score}</TableCell>
+          <TableCell>{row.submitted}</TableCell>
+          <TableCell>{row.carbs}</TableCell>
+          <TableCell>{row.garde}</TableCell>
+        </TableRow>
+      ))}
+    </TableBody>
+  </Table>
+</TableContainer>
+      </div>
     </Layout>
   );
 }
 
-export async function getStaticProps() {
-  const res = await fetch("http://localhost:3000/api/students");
-  const posts = await res.json();
+// export async function getStaticProps() {
+//   const res = await fetch("http://localhost:3000/api/students");
+//   const posts = await res.json();
+//   return {
+//     props: {
+//       posts,
+//     },
+//   };
+// }
+export async function getStaticProps(context) {
+  const res = await getStudents();
   return {
-    props: {
-      posts,
-    },
+    props: { data: res.data },
   };
 }
